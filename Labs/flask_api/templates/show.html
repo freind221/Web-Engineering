@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Show-Products</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+        <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+        <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    
+    
+    </head>
+<body>
+    
+    <button id="mybutton">Show-Products</button>
+    <table id="show" border="2">
+       
+    
+    </table>
+
+
+    <script>
+        var myData
+        $(document.body).on('click', "#mybutton", function (e) {
+            //doStuff
+            console.log("hello")
+            $.ajax({
+                type: "GET",
+                url: "/api/products",
+                success: function (result) {
+                    
+                    myData = result
+                    console.log(myData)
+                    if (myData != null || myData != "") {
+                        table = $('#show').DataTable({
+                            data: myData, destroy: true,
+                            columns: [
+                                { data: 'name' },
+                                { data: 'desc' },
+                                { data: 'price' },
+                                {data: '_id.$oid'},
+                                { 
+                                    data: '',
+                                    render: (data,type,row) => {
+                                      return `<a href='update.html${row.id}'>update</a>`;
+                                    }
+                                },
+                                { 
+                                    data: '',
+                                    render: (data,type,row) => {
+                                      return `<a href='update.html${row.id}'>Delete</a>`;
+                                    }
+                                }
+                                
+                            ],
+                            
+                            
+                            
+                        });
+                    }
+                }
+            });
+        });
+
+
+    </script>
+    
+    <center style="width: 500px;margin-left: 500px;margin-top: 100px;">
+        <form id="form" action="" method="post">
+            <label for="exampleInputEmail1" class="form-label">Id</label> <input class="form-control" type="text"
+                name="name" id="name_up"><br>
+           
+            <input id="submit" type="button" name="submit" value="submit">
+        </form>
+    </center>
+    <script>
+        $(document).ready(function () {
+            // click on button submit
+            $("#submit").on('click', function () {
+                // send ajax
+                var formdata = $("#form").serializeArray();
+                var data = {};
+                $(formdata).each(function (index, obj) {
+                    data[obj.name] = obj.value;
+                });
+                data = JSON.stringify(data)
+                var nam = document.getElementById('name_up').value
+                console.log(data)
+                $.ajax({
+                    url: `/api/products/${nam}`, // url where to submit the request
+                    type: "DELETE", // type of action POST || GET
+                    data: data, // post data || get data
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+
+                    success: function (result) {
+                        // you can see the result from the console
+                        // tab of the developer tools
+                        $('body').append('<h2>Deleted Successfully</h2>')
+                        console.log(result);
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+
+            });
+        });
+    </script>
+
+</body>
+</html>

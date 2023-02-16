@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacts</title>
+</head>
+<body>
+<h2>{{ name }} Contacts<h2>
+<table border="2"><tr>
+    <th>Name</th>
+<th>Credit</th>
+<th>Enrolled</th>
+</tr>
+{% for course in courses %}
+    <tr>
+        <td>{{ course["name"] }}</td>
+        <td>{{ course["credit"] }}</td>
+        <td>{{ course["enrolled"] }}</td>
+    </tr>
+{% endfor %}
+</table>
+</body>
+</html>

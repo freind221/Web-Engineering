@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!-- Created By MultiWebPress - www.multiwebpress.com -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poll UI Design | MultiWebPress</title>
+  <link rel="stylesheet" href="/static/poll.css">
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <div class="wrapper">
+    <header>Which one increases your apetite? <br></header>
+    <div class="poll-area">
+      <input type="checkbox" name="poll" id="opt-1">
+      <input type="checkbox" name="poll" id="opt-2">
+      <input type="checkbox" name="poll" id="opt-3">
+      <input type="checkbox" name="poll" id="opt-4">
+      <label for="opt-1" class="opt-1">
+        <div class="row">
+          <div class="column">
+            <span class="circle"></span>
+            <span class="text" id="food1">Photoshop</span>
+          </div>
+          <span class="percent" id="count1">55%</span>
+        </div>
+        <div class="progress" id="pstyle1" style='--w:55;'></div>
+      </label>
+      <label for="opt-2" class="opt-2">
+        <div class="row">
+          <div class="column">
+            <span class="circle"></span>
+            <span class="text" id="food2">Sketch</span>
+          </div>
+          <span class="percent" id="count2">20%</span>
+        </div>
+        <div class="progress" id="pstyle2" style='--w:80;'></div>
+      </label>
+      
+      
+    </div>
+  </div>
+  
+  <script>
+    let count = []
+    let count1 = 0;
+    let count2 = 0;
+    const options = document.querySelectorAll("label");
+for (let i = 0; i < options.length; i++) {
+  options[i].addEventListener("click", ()=>{
+    for (let j = 0; j < options.length; j++) {
+      if(options[j].classList.contains("selected")){
+        
+        options[j].classList.remove("selected");
+      }
+    }
+
+    options[i].classList.add("selected");
+    
+
+   
+    for (let k = 0; k < options.length; k++) {
+     
+      options[k].classList.add("selectall");
+    }
+
+    let forVal = options[i].getAttribute("for");
+    let selectInput = document.querySelector("#"+forVal);
+    let getAtt = selectInput.getAttribute("type");
+    if(getAtt == "checkbox"){
+      count1++;
+      
+      count.push(count1);
+      console.log(count[1])
+      console.log(count[0])
+      
+      selectInput.setAttribute("type", "radio");
+    }else if(selectInput.checked == true){
+      count1--;
+      console.log(count1)
+      options[i].classList.remove("selected");
+      selectInput.setAttribute("type", "checkbox");
+    }
+
+    let array = [];
+    for (let l = 0; l < options.length; l++) {
+      if(options[l].classList.contains("selected")){
+        
+        array.push(l);
+      }
+    }
+    if(array.length == 0){
+      for (let m = 0; m < options.length; m++) {
+        options[m].removeAttribute("class");
+      }
+    }
+  });
+}
+    
+		$(document).ready(function () {
+
+			
+			$.ajax({
+				url: `/api/pollData/`, // url where to submit the request
+				type: "GET", // type of action POST || GET
+				dataType: 'json',
+				contentType: "application/json; charset=utf-8",
+
+				success: function (result) {
+          console.log(result[0]['food1'])
+          let temp_html =`<span id="food1">${result[0]['food1']}</span>`
+          let temp_html1 =`<span id="food2">${result[0]['food2']}</span>`
+          let temp_html2 =`<span id="count1">${result[0]['count1']}</span>`
+          let temp_html3 =`<span id="count2">${result[0]['count2']}</span>`
+          $("#food1").html(temp_html);
+          $("#food2").html(temp_html1);
+          $("#count1").html(temp_html2);
+          $("#count2").html(temp_html3);
+					
+
+					// you can see the result from the console
+					// tab of the developer tools
+					console.log(result);
+				},
+				error: function (xhr, resp, text) {
+					console.log(xhr, resp, text);
+				}
+			})
+
+			// click on button submit
+			
+		});
+
+
+            // click on button submit
+
+	</script>
+</body>
+</html>
